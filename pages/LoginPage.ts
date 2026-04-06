@@ -1,28 +1,40 @@
 import { Page, Locator } from '@playwright/test';
+
 export class LoginPage {
 	readonly page: Page;
-	readonly userNameInput: Locator;
+	readonly usernameInput: Locator; // Changed from userNameInput to usernameInput (standard naming)
 	readonly passwordInput: Locator;
-	readonly logInButton: Locator;
+	readonly loginButton: Locator; // Changed from logInButton to loginButton
 
 	constructor(page: Page) {
 		this.page = page;
-		this.userNameInput = page.locator('[data-test="username"]');
+		this.usernameInput = page.locator('[data-test="username"]');
 		this.passwordInput = page.locator('[data-test="password"]');
-		this.logInButton = page.locator('[data-test="login-button"]');
+		this.loginButton = page.locator('[data-test="login-button"]');
 	}
 
+	/**
+	 * Navigates to the login page using the baseURL from playwright.config.ts
+	 */
 	async navigate(): Promise<void> {
-		await this.page.goto('https://www.saucedemo.com/');
+		await this.page.goto('/');
 	}
 
-	async logIn(
-		userName: string = process.env.STANDARD_USER || 'standard_user',
+	/**
+	 * Performs login operation.
+	 * Uses environment variables by default with hardcoded fallbacks.
+	 */
+	async login(
+		username: string = process.env.STANDARD_USER || 'standard_user',
 		password: string = process.env.PASSWORD || 'secret_sauce',
 	): Promise<void> {
-		await this.userNameInput.waitFor({ state: 'visible' });
-		await this.userNameInput.fill(userName);
+		// Wait for the page to be ready
+		await this.usernameInput.waitFor({ state: 'visible' });
+
+		// Clear inputs before filling (Best practice to avoid prepending text)
+		await this.usernameInput.fill(username);
 		await this.passwordInput.fill(password);
-		await this.logInButton.click();
+
+		await this.loginButton.click();
 	}
 }

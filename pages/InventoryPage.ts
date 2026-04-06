@@ -7,8 +7,6 @@ export class InventoryPage {
 	readonly productPrices: Locator;
 	readonly cartButton: Locator;
 	readonly inventoryItem: Locator;
-	// readonly cartItem: Locator;
-	// readonly checkoutItem: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
@@ -19,13 +17,10 @@ export class InventoryPage {
 			'[data-test="inventory-item-price"]',
 		);
 		this.cartButton = page.locator('[data-test="shopping-cart-link"]');
-
 		this.inventoryItem = page.locator('[data-test="inventory-item"]');
-		// this.cartItem = page.locator('[data-test="cart-item"]');
-		// this.checkoutItem = page.locator('[data-test="checkout-item"]');
 	}
 
-	getAddToCartButton(productName: string): Locator {
+	private getAddToCartButton(productName: string): Locator {
 		const formattedName = productName.toLowerCase().replaceAll(' ', '-');
 		return this.page.locator(
 			`[data-test="add-to-cart-${formattedName}"]`,
@@ -51,49 +46,24 @@ export class InventoryPage {
 		await this.cartButton.click();
 	}
 
-	async getProductPrice(
-		// location: string,
-		productNameExpected: string,
-	): Promise<string> {
-		// let itemsLocator: Locator[];
-		// if (location === 'initial') {
-		const itemsLocator = await this.inventoryItem.all();
-		// } else if (location === 'details') {
-		// 	itemsLocator = await this.cartItem.all();
-		// } else {
-		// 	itemsLocator = await this.checkoutItem.all(); // pentru 'checkout'
-		// }
-		for (var item of itemsLocator) {
-			const productNameUI = await item
-				.locator('.inventory_item_name')
-				.innerText();
-			if (productNameExpected === productNameUI) {
-				return await item
-					.locator('.inventory_item_price')
+	async getProductPrice(productNameExpected: string): Promise<string> {
+		{
+			const itemsLocator = await this.inventoryItem.all();
+			for (var item of itemsLocator) {
+				const productNameUI = await item
+					.locator('.inventory_item_name')
 					.innerText();
+				if (productNameExpected === productNameUI) {
+					return await item
+						.locator('.inventory_item_price')
+						.innerText();
+				}
 			}
-		}
 
-		return '';
+			return '';
+		}
 	}
 
-	// async getProductPriceFromDetailsPage(
-	// 	locator:Locator, productNameExpected: string,
-	// ): Promise<string> {
-	// 	const allInventoryItems = await this.cartItem.all();
-	// 	for (var item of allInventoryItems) {
-	// 		const productNameUI = await item
-	// 			.locator('.inventory_item_name')
-	// 			.innerText();
-	// 		if (productNameExpected === productNameUI) {
-	// 			return await item
-	// 				.locator('.inventory_item_price')
-	// 				.innerText();
-	// 		}
-	// 	}
-	// 	return '';
-	// }
-	//mai elegant scris
 	// async getProductPriceVar2(productNameExpected: string): Promise<string> {
 	// 	return await this.inventoryItem
 	// 		.filter({ hasText: productNameExpected })
