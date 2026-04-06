@@ -32,6 +32,13 @@ export class InventoryPage {
 		);
 	}
 
+	getAddToCartButton2(productName: string): Locator {
+		const formattedName = productName.toLowerCase().replaceAll(' ', '-');
+		return this.page.locator(
+			`[data-test="add-to-cart-${formattedName}"]`,
+		);
+	}
+
 	async clickSortProducts(sortKey: SortOptions): Promise<void> {
 		await this.sortDropdown.selectOption(sortKey);
 	}
