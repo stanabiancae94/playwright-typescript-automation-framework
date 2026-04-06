@@ -17,8 +17,8 @@ export class LoginPage {
 	}
 
 	async logIn(
-		userName: string = 'standard_user',
-		password: string = 'secret_sauce',
+		userName: string = process.env.STANDARD_USER || 'standard_user',
+		password: string = process.env.PASSWORD || 'secret_sauce',
 	): Promise<void> {
 		await this.userNameInput.waitFor({ state: 'visible' });
 		await this.userNameInput.fill(userName);
